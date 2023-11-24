@@ -52,7 +52,23 @@ a_c = a_a + alpha * r_ca - omega^2 * r_ca;
 a_cx = a_c(1);
 a_cy = a_c(2);
 
-% Calculate the acceleration of the mass center of the crank AV
+% Calculate the acceleration of the mass center of the crank AC
 a_g_cx = a_ax + alpha * r_ca(1)/2 - omega^2 * r_ca(1);
 a_g_cy = a_ay + alpha * r_ca(2)/2 - omega^2 * r_ca(2);
 
+% --------------------------------------------
+% Calculate the velocities of the connecting rod AB
+% --------------------------------------------
+% Calculate the angle phi of the connecting rod AB
+phi = asin(R/L * sin(theta));
+
+% Define position vector
+r_ba = L * [-sin(phi), -cos(phi)];
+
+% Calculate velocity vector from v_a + r*omega
+v_b = v_a + omega * r_ba;
+v_bx = v_b(1);
+v_by = v_b(2);
+
+% Calculate the angular velocity of the connecting rod from omega = v/r
+omega_b = -v_ay / L*cos(phi);
