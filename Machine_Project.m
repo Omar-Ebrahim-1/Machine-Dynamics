@@ -62,8 +62,8 @@ a_cx = a_c(1);
 a_cy = a_c(2);
 
 % Calculate the acceleration of the mass center of the crank AC
-a_g_cx = a_ax + alpha * r_ca(1)/2 - omega^2 * r_ca(1);
-a_g_cy = a_ay + alpha * r_ca(2)/2 - omega^2 * r_ca(2);
+a_g_cx = -(omega^2 * R * cos(theta))/2
+a_g_cy = -(omega^2 * R * sin(theta))/2
 
 % --------------------------------------------
 % Calculate the velocities of the connecting rod AB
@@ -80,7 +80,10 @@ v_bx = v_b(1);
 v_by = v_b(2);
 
 % Calculate the angular velocity of the connecting rod from omega = v/r
-omega_b = -v_ay / L*cos(phi);
+omega_b = -v_a_y / L*cos(phi);
+
+% Calculate the angular acceleration of the connecting rod from alpha = a/r
+alpha_b = -(a_a_y + omega^2 * L * sin(phi)) / L*cos(phi);
 
 % --------------------------------------------
 % Calculate the accelerations of the connecting rod AB
@@ -150,4 +153,46 @@ omega_c = matlabFunction(omega_c); % rad/s
 omega_c = omega_c(L, phi, v_ay); % rad/s
 
 alpha_c = matlabFunction(alpha_c); % rad/s^2
-alpha_c = alpha_c(L, a_ay, omega, phi); % rad/s^2
+alpha_c = alpha_c(L, a_ay, omega_c, phi); % rad/s^2
+
+% Calculate the angular velocity and acceleration of AB
+omega_b = matlabFunction(omega_b) % rad/s
+omega_b = omega_b(L, phi, v_ay); % rad/s
+
+alpha_b = matlabFunction(alpha_b) % rad/s^2
+alpha_b = alpha_b(L, a_ay, omega_b, phi); % rad/s^2
+
+% Calculate the acceleration of the mass center of the crank
+a_g_cx = matlabFunction(a_g_cx) % m/s^2
+a_g_cx = a_g_cx(omega, R, theta1); % m/s^2
+
+a_g_cy = matlabFunction(a_g_cy) % m/s^2
+a_g_cy = a_g_cy(omega, R, theta1); % m/s^2
+
+% Calculate the acceleration of C
+a_cx = @(a_ax, alpha_c, omega_c, L, phi) ...
+  a_ax + alpha_c * L * sin(phi) - omega_c^2 * L * cos(phi); % m/s^2
+a_cx = a_cx(a_ax, alpha_c, omega_c, L, phi); % m/s^2
+
+% Calculate the acceleration of the mass center of the connecting rod
+a_G_cx = @(a_ax, alpha_c, omega_c, L, phi) ...
+  a_ax + alpha_c * L/2 * sin(phi) - omega_c^2 * L * cos(phi)
+a_G_cx = a_G_cx(a_ax, alpha_c, omega_c, L, phi); % m/s^2
+
+a_G_cy = @(a_ay, alpha_c, omega_c, L, phi) ...
+  a_ay + alpha_c * L/2 * cos(phi) - omega_c^2 * L * sin(phi)
+a_G_cy = a_G_cy(a_ay, alpha_c, omega_c, L, phi); % m/s^2
+
+% Calculate the acceleration of B
+a_bx = @(a_ax, alpha_b, omega_b, L, phi) ...
+  a_ax + alpha_b * L * sin(phi) - omega_b^2 * L * cos(phi); % m/s^2
+a_bx = a_bx(a_ax, alpha_b, omega_b, L, phi); % m/s^2
+
+% Calculate the acceleration of the mass center of the connecting rod
+a_G_bx = @(a_ax, alpha_b, omega_b, L, phi) ...
+  a_ax + alpha_b * L/2 * sin(phi) - omega_b^2 * L * cos(phi)
+a_G_bx = a_G_bx(a_ax, alpha_b, omega_b, L, phi); % m/s^2
+
+a_G_by = @(a_ay, alpha_b, omega_b, L, phi) ...
+  a_ay + alpha_b * L/2 * cos(phi) - omega_b^2 * L * sin(phi)
+a_G_by = a_G_by(a_ay, alpha_b, omega_b, L, phi); % m/s^2
