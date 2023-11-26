@@ -2,11 +2,18 @@
 clear; clc;
 
 % --------------------------------------------
+% --------------------------------------------
+% Symbolic solution
+% --------------------------------------------
+% --------------------------------------------
+
+% --------------------------------------------
 % Calculate the velocity of point A
 % --------------------------------------------
 
 % Define symbolic variables
-syms L R theta omega alpha
+syms L R theta omega alpha m_c r_c phi
+syms v_a_y a_a_y
 
 % Define position vector
 r_atheta = R * [-sin(theta), cos(theta)];
@@ -40,8 +47,10 @@ v_c = v_a + omega * r_ca;
 v_cx = v_c(1);
 v_cy = v_c(2);
 
-% Calculate the angular velocity of the crank from omega = v/r
-omega_c = -v_ay / r_ca(2);
+% Calculate the angular velocity and acceleration of the crank
+omega_c = -v_a_y / L * cos(phi);
+alpha_c = -(a_a_y + omega^2 * L * sin(phi)) / L * cos(phi);
+
 
 % --------------------------------------------
 % Calculate the accelerations of the crank AC
@@ -72,3 +81,73 @@ v_by = v_b(2);
 
 % Calculate the angular velocity of the connecting rod from omega = v/r
 omega_b = -v_ay / L*cos(phi);
+
+% --------------------------------------------
+% Calculate the accelerations of the connecting rod AB
+% --------------------------------------------
+
+% Calculate acceleration vector from a_a + alpha * r - omega^2 * r
+a_b = a_a + alpha * r_ba - omega^2 * r_ba;
+a_bx = a_b(1);
+a_by = a_b(2);
+
+% Calculate the acceleration of the mass center of the connecting rod AB
+a_g_bx = a_ax + alpha * r_ba(1)/2 - omega^2 * r_ba(1);
+a_g_by = a_ay + alpha * r_ba(2)/2 - omega^2 * r_ba(2);
+
+% --------------------------------------------
+% Calculate the crank forces
+% --------------------------------------------
+
+% Calculate the crank forces
+F_cx = m_c * r_c/2 * omega^2 * cos(theta);
+F_cy = m_c * r_c/2 * omega^2 * sin(theta);
+
+n = r_c/L;
+F_I = 0;
+F_II = (2 * m_c * r_c * omega^2 * cos(2 * theta))/n;
+
+
+% --------------------------------------------
+% --------------------------------------------
+% Numerical solution
+% --------------------------------------------
+% --------------------------------------------
+% Define constants
+omega = 5500*2*pi/60; % rad/s
+L = 0.4419; % m
+R = 0.1016; % m
+m_c = 0.98; % kg
+m_r = 0.62; % kg
+m_p = 0.78; % kg
+x = -0.01:0.0001:0.01; % m
+theta1 = omega*x; % rad
+
+% --------------------------------------------------------
+% The calculations use the symbolic solutions found above
+% --------------------------------------------------------
+
+% Calculate the angle phi
+phi = matlabFunction(phi); % rad
+phi = phi(L, R, theta1); % rad
+
+% Calculate the velocity of point A
+v_ax = matlabFunction(v_ax); % m/s
+v_ax = v_ax(R, omega, theta1); % m/s
+
+v_ay = matlabFunction(v_ay); % m/s
+v_ay = v_ay(R, omega, theta1); % m/s
+
+% Calculate the acceleration of point A
+a_ax = matlabFunction(a_ax); % m/s^2
+a_ax = a_ax(R, omega, theta1); % m/s^2
+
+a_ay = matlabFunction(a_ay); % m/s^2
+a_ay = a_ay(R, omega, theta1); % m/s^2
+
+% Calculate the angular velocity and acceleration of the crank
+omega_c = matlabFunction(omega_c); % rad/s
+omega_c = omega_c(L, phi, v_ay); % rad/s
+
+alpha_c = matlabFunction(alpha_c); % rad/s^2
+alpha_c = alpha_c(L, a_ay, omega, phi); % rad/s^2
