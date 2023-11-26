@@ -148,6 +148,10 @@ a_ax = a_ax(R, omega, theta1); % m/s^2
 a_ay = matlabFunction(a_ay); % m/s^2
 a_ay = a_ay(R, omega, theta1); % m/s^2
 
+% Calculate the acceleration of point B
+a_bx = @(a_ax, alpha_b, omega_b, L, phi) ...
+  a_ax + alpha_b * L * sin(phi) - omega_b^2 * L * cos(phi); % m/s^2
+
 % Calculate the angular velocity and acceleration of the crank
 omega_c = matlabFunction(omega_c); % rad/s
 omega_c = omega_c(L, phi, v_ay); % rad/s
@@ -161,6 +165,11 @@ omega_b = omega_b(L, phi, v_ay); % rad/s
 
 alpha_b = matlabFunction(alpha_b) % rad/s^2
 alpha_b = alpha_b(L, a_ay, omega_b, phi); % rad/s^2
+
+% Calculate the acceleration of the crank
+a_cx = @(a_ax, alpha_c, omega_c, L, phi) ...
+  a_ax + alpha_c * L * sin(phi) - omega_c^2 * L * cos(phi); % m/s^2
+a_cx = a_cx(a_ax, alpha_c, omega_c, L, phi); % m/s^2
 
 % Calculate the acceleration of the mass center of the crank
 a_g_cx = matlabFunction(a_g_cx) % m/s^2
@@ -196,3 +205,165 @@ a_G_bx = a_G_bx(a_ax, alpha_b, omega_b, L, phi); % m/s^2
 a_G_by = @(a_ay, alpha_b, omega_b, L, phi) ...
   a_ay + alpha_b * L/2 * cos(phi) - omega_b^2 * L * sin(phi)
 a_G_by = a_G_by(a_ay, alpha_b, omega_b, L, phi); % m/s^2
+
+% Calculate the crank forces
+C = m_p * a_cx;
+F_cx = m_r * a_g_cx - C;
+F_cy = m_r * a_g_cy;
+
+% Calculate the connecting rod forces
+B = m_p * a_bx;
+F_bx = m_r * a_G_bx - B;
+F_by = m_r * a_G_by;
+
+% Calculate the Torque
+T = R*cos(theta1) * (F_by + F_cy) - R*sin(theta1) * (F_bx + F_cx);
+
+% --------------------------------------------
+% --------------------------------------------
+% Plotting
+% --------------------------------------------
+% --------------------------------------------
+% Plot the velocity of point A
+figure(1)
+plot(x, v_ax, 'LineWidth', 2)
+hold on
+plot(x, v_ay, 'LineWidth', 2)
+hold off
+title('Velocity of point A')
+xlabel('x (m)')
+ylabel('Velocity (m/s)')
+legend('v_{ax}', 'v_{ay}')
+grid on
+
+% Plot the acceleration of point A
+figure(2)
+plot(x, a_ax, 'LineWidth', 2)
+hold on
+plot(x, a_ay, 'LineWidth', 2)
+hold off
+title('Acceleration of point A')
+xlabel('x (m)')
+ylabel('Acceleration (m/s^2)')
+legend('a_{ax}', 'a_{ay}')
+grid on
+
+% Plot the acceleration of point B
+figure(3)
+plot(x, a_bx(a_ax, alpha_b, omega_b, L, phi), 'LineWidth', 2)
+hold on
+plot(x, a_by, 'LineWidth', 2)
+hold off
+title('Acceleration of point B')
+xlabel('x (m)')
+ylabel('Acceleration (m/s^2)')
+legend('a_{bx}', 'a_{by}')
+grid on
+
+% Plot the angular velocity of the crank
+figure(4)
+plot(x, omega_c, 'LineWidth', 2)
+title('Angular velocity of the crank')
+xlabel('x (m)')
+ylabel('Angular velocity (rad/s)')
+grid on
+
+% Plot the angular acceleration of the crank
+figure(5)
+plot(x, alpha_c, 'LineWidth', 2)
+title('Angular acceleration of the crank')
+xlabel('x (m)')
+ylabel('Angular acceleration (rad/s^2)')
+grid on
+
+% Plot the angular velocity of the connecting rod
+figure(6)
+plot(x, omega_b, 'LineWidth', 2)
+title('Angular velocity of the connecting rod')
+xlabel('x (m)')
+ylabel('Angular velocity (rad/s)')
+grid on
+
+% Plot the angular acceleration of the connecting rod
+figure(7)
+plot(x, alpha_b, 'LineWidth', 2)
+title('Angular acceleration of the connecting rod')
+xlabel('x (m)')
+ylabel('Angular acceleration (rad/s^2)')
+grid on
+
+% Plot the acceleration of the crank
+figure(8)
+plot(x, a_cx, 'LineWidth', 2)
+title('Acceleration of the crank')
+xlabel('x (m)')
+ylabel('Acceleration (m/s^2)')
+grid on
+
+% Plot the acceleration of the mass center of the crank
+figure(9)
+plot(x, a_g_cx, 'LineWidth', 2)
+hold on
+plot(x, a_g_cy, 'LineWidth', 2)
+hold off
+title('Acceleration of the mass center of the crank')
+xlabel('x (m)')
+ylabel('Acceleration (m/s^2)')
+legend('a_{gx}', 'a_{gy}')
+grid on
+
+% Plot the acceleration of the mass center of the connecting rod
+figure(10)
+plot(x, a_G_cx, 'LineWidth', 2)
+hold on
+plot(x, a_G_cy, 'LineWidth', 2)
+hold off
+title('Acceleration of the mass center of the connecting rod')
+xlabel('x (m)')
+ylabel('Acceleration (m/s^2)')
+legend('a_{Gx}', 'a_{Gy}')
+grid on
+
+% Plot the acceleration of the mass center of the connecting rod
+figure(11)
+plot(x, a_G_bx, 'LineWidth', 2)
+hold on
+plot(x, a_G_by, 'LineWidth', 2)
+hold off
+title('Acceleration of the mass center of the connecting rod')
+xlabel('x (m)')
+ylabel('Acceleration (m/s^2)')
+legend('a_{Gx}', 'a_{Gy}')
+grid on
+
+% Plot the crank forces
+figure(12)
+plot(x, F_cx, 'LineWidth', 2)
+hold on
+plot(x, F_cy, 'LineWidth', 2)
+hold off
+title('Crank forces')
+xlabel('x (m)')
+ylabel('Force (N)')
+legend('F_{cx}', 'F_{cy}')
+grid on
+
+% Plot the connecting rod forces
+figure(13)
+plot(x, F_bx, 'LineWidth', 2)
+hold on
+plot(x, F_by, 'LineWidth', 2)
+hold off
+title('Connecting rod forces')
+xlabel('x (m)')
+ylabel('Force (N)')
+legend('F_{bx}', 'F_{by}')
+grid on
+
+% Plot the torque
+figure(14)
+plot(x, T, 'LineWidth', 2)
+title('Torque')
+xlabel('x (m)')
+ylabel('Torque (N*m)')
+grid on
