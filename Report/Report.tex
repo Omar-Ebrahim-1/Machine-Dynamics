@@ -1,0 +1,60 @@
+\documentclass[12pt, titlepage]{article}
+
+\usepackage{graphicx} % Allows for images
+\usepackage{wrapfig} % Allows for text wrapping around images
+\usepackage{hyperref} % Allows for hyperlinks
+\usepackage{siunitx} % Allows for SI units
+\usepackage{amsmath} % Allows for math
+\usepackage{enumerate} % Allows for custom enumerations
+\usepackage{xcolor} % Allows for custom colors
+\usepackage{tikz, tcolorbox} % Allows for custom boxes
+\usepackage{microtype} % Allows for better text alignment
+\usepackage{listings} % Allows for code listings
+\usepackage{booktabs} % Allows for better tables
+\usepackage{float} % Allows for better figure placement
+\usepackage{geometry} % Allows for custom page geometry
+\usepackage{fancyhdr} % Allows for custom headers and footers
+\usepackage{caption} % Allows for custom captions
+
+\fancypagestyle{myarticlestyle}{
+    \fancyhf{} % Clear header and footer
+    \fancyhead[L]{\leftmark} % Section name on the left
+    \fancyhead[R]{\thepage} % Page number on the right
+}
+\fancypagestyle{tocstyle}{
+    \fancyhf{} % Clear header and footer
+    \fancyhead[L]{CONTENTS} % Section name on the left
+    \fancyhead[R]{\thepage} % Page number on the right
+}
+
+\pagestyle{myarticlestyle}
+\setlength{\headheight}{15pt}
+
+\title{Dynamic Force Analysis}
+\author{Omar Ebrahim 110076575\\Dr. Bill Altenhof\\ University of Windsor}
+
+\begin{document}
+\maketitle
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+\thispagestyle{tocstyle}
+\newpage
+\section{Introduction}
+\newpage
+\section{Section}
+\newpage
+\section{Section}
+\newpage
+\section{Discussion}
+\newpage
+\section{Conclusions}
+\newpage
+\section{References}
+\newpage
+\appendix
+\section{Appendix}
+\end{document}
