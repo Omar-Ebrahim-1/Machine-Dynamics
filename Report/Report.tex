@@ -91,12 +91,84 @@ interdisciplinary nature of dynamic force examination.\\[10pt]
 Collectively, these papers form a robust foundation for the comprehensive analysis of the mechanical system under consideration.
 \newpage
 \section{Methodology}
+The methodology section will outline the approach taken to conduct the analysis
+and the tools utilized.
+\subsection{Analytical Approach}
+The analytical approach will be employed to determine the out-of-balance forces
+and the input torque for constant angular velocity. The equations of motion
+will be derived using the Newton-Euler method, and the out-of-balance forces
+will be determined using the method of dynamically equivalent masses and 
+force balancing.\\[10pt]
+The Newton-Euler method is a powerful tool for deriving the equations of motion
+for a mechanical system. It involves the application of Newton's second law of
+motion and Euler's equations of motion. The method is particularly useful for
+systems with multiple degrees of freedom.\\[10pt]
+The method of dynamically equivalent masses and force balancing is a
+straightforward approach for determining the out-of-balance forces. It involves
+the application of the principle of virtual work, and it is particularly useful
+for systems with multiple degrees of freedom.
+\subsection{Computational Approach}
+The computational approach will be utilized to determine the angular
+velocities, angular accelerations, and transmitted forces. The equations of
+motion will be solved numerically using MATLAB.\\[10pt]
+The MATLAB software is a powerful tool for solving complex equations. It
+provides a robust platform for numerical analysis, and it is particularly
+useful for solving systems of equations.
 \newpage
 \section{Analysis}
 Assumptions made in the analysis include treating each linkage as a slender
 rod, neglecting the effects of gravity and friction, and confining all motion
 to a common plane. It is imperative to document and articulate any additional
-assumptions deemed necessary for the analysis.
+assumptions deemed necessary for the analysis.\\[10pt]
+The Required To Find (RTF) statements are as follows:
+\begin{enumerate}
+    \item Determine the angular velocities and angular accelerations of the
+      crank, connecting rod, and slider.
+    \item Determine the transmitted forces in the connecting rod and slider.
+    \item Determine the input torque for constant angular velocity.
+    \item Determine the out-of-balance forces.
+\end{enumerate}
+\subsection{Equations of Motion for Point A}
+A diagram of the system is shown in Figure \ref{fig:system}. The diagram
+shows the crank as well as point A rotating at $\omega$ radians per second
+with angles $\theta$ and $\phi$ respectively.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./Images/f1.png}
+    \caption{System Diagram}
+    \label{fig:system}
+\end{figure}
+First, we will derive the equation of velocity for point A. The equation of
+velocity for point A is given by:
+\begin{equation}
+    \label{eq:vel}
+    \vec{v}_A = \omega \times \vec{r}_A \angle R\cos\theta + R\sin\theta
+\end{equation}
+Finding the x and y components of the equation of velocity for point A yields:
+\begin{equation}
+    \label{eq:velxy}
+    \begin{split}
+        v_{Ax} &= -R\omega\sin\theta\\
+        v_{Ay} &= R\omega\cos\theta
+    \end{split}
+\end{equation}
+Next, we will derive the equation of acceleration for point A. The equation of
+acceleration for point A is given by:
+\begin{equation}
+    \label{eq:acc}
+    \vec{a}_A = \omega \times (\omega \times \vec{r}_A) \angle
+    R\cos\theta\omega^2, R\sin\theta\omega^2
+\end{equation}
+Finding the x and y components of the equation of acceleration for point A
+yields:
+\begin{equation}
+    \label{eq:accxy}
+    \begin{split}
+        a_{Ax} &= -R\omega^2\cos\theta\\
+        a_{Ay} &= -R\omega^2\sin\theta
+    \end{split}
+\end{equation}
+\subsection{Equations of Motion for Point B}
 \newpage
 \section{Discussion}
 \newpage
